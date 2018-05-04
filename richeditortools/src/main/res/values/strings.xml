@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">RichEditorTools</string>
+
+    <string name="label_material_image">素材库图片</string>
+    <string name="label_material_video">素材库视频</string>
+    <string name="label_material_text">素材库文字</string>
+    <string name="label_local_image">本地图片</string>
+    <string name="label_local_video">本地视频</string>
+    <string name="prompt_select_font_color">选择字体颜色</string>
+    <string name="prompt_select_font_size">选择字体大小</string>
+</resources>

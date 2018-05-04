@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -19,7 +18,6 @@ import android.webkit.WebViewClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -27,6 +25,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Copyright (C) 2015 Wasabeef
@@ -45,6 +44,7 @@ import java.util.Locale;
  */
 
 public class RichEditor extends WebView {
+    public static String MLF_IMG_STYLE = "<style>img{width:100%% !important;height:auto  !important;}</style>";
     public static final String TAG = RichEditor.class.getName();
 
     public enum Type {
@@ -104,23 +104,14 @@ public class RichEditor extends WebView {
         void onAfterInitialLoad(boolean isReady);
     }
 
-    public interface OnFocusChangedListener {
-        void onBlur();
-        void onFocus();
-    }
-
-
-
     private static final String SETUP_HTML = "file:///android_asset/editor.html";
     private static final String CALLBACK_SCHEME = "re-callback://";
-    private static final String INTERFACE_SCHEME = "re-interface://";
     private static final String STATE_SCHEME = "re-state://";
     private boolean isReady = false;
     private String mContents;
     private OnTextChangeListener mTextChangeListener;
     private OnDecorationStateListener mDecorationStateListener;
     private AfterInitialLoadListener mLoadListener;
-    private OnFocusChangedListener mOnFocusChangedListener;
 
     public RichEditor(Context context) {
         this(context, null);
@@ -153,7 +144,6 @@ public class RichEditor extends WebView {
                 setEditorHeight(px);
             }
         });
-
     }
 
     protected EditorWebViewClient createWebviewClient() {
@@ -170,10 +160,6 @@ public class RichEditor extends WebView {
 
     public void setOnInitialLoadListener(AfterInitialLoadListener listener) {
         mLoadListener = listener;
-    }
-
-    public void setOnFocusChangedListener(OnFocusChangedListener mOnFocusChangedListener) {
-        this.mOnFocusChangedListener = mOnFocusChangedListener;
     }
 
     private void callback(String text) {
@@ -199,24 +185,6 @@ public class RichEditor extends WebView {
 
         if (mDecorationStateListener != null) {
             mDecorationStateListener.onStateChangeListener(state, types);
-        }
-
-        if (mOnFocusChangedListener != null) {
-            mOnFocusChangedListener.onFocus();
-        }
-    }
-
-    private void interfaceCallback(String text) {
-        String method = text.replaceFirst(INTERFACE_SCHEME, "").toLowerCase();
-        if ("onfocus".equals(method)) {
-            if (mOnFocusChangedListener != null) {
-                mOnFocusChangedListener.onFocus();
-            }
-        }
-        if ("onblur".equals(method)) {
-            if (mOnFocusChangedListener != null) {
-                mOnFocusChangedListener.onBlur();
-            }
         }
     }
 
@@ -259,16 +227,34 @@ public class RichEditor extends WebView {
         if (contents == null) {
             contents = "";
         }
+        contents += MLF_IMG_STYLE;
         try {
             exec("javascript:RE.setHtml('" + URLEncoder.encode(contents, "UTF-8") + "');");
         } catch (UnsupportedEncodingException e) {
             // No handling
         }
         mContents = contents;
+
+//        exec("javascript:RE.changeImgStyle()");
     }
 
+    public void setEditable(boolean editable) {
+        exec("javascript:RE.setEditable('" + editable + "');");
+    }
+
+
     public String getHtml() {
-        return mContents;
+        if (mContents == null) {
+            return null;
+        }
+        return removeFirstStyle(mContents);
+//        return mContents;
+    }
+
+    static public String removeFirstStyle(String content) {
+        Pattern p = Pattern.compile("<style[^>]*>(.*?)</style>",
+                Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+        return p.matcher(content).replaceFirst("");
     }
 
     public void setEditorFontColor(int color) {
@@ -451,6 +437,11 @@ public class RichEditor extends WebView {
         exec("javascript:RE.insertImage('" + url + "', '" + alt + "');");
     }
 
+    @Override
+    public boolean performClick() {
+        return super.performClick();
+    }
+
     public void insertImage(List<Pair<String, String>> pairs, String alt) {
         if (pairs == null || pairs.isEmpty()) {
             return;
@@ -516,6 +507,7 @@ public class RichEditor extends WebView {
         }
     }
 
+
     protected class EditorWebViewClient extends WebViewClient {
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -542,9 +534,6 @@ public class RichEditor extends WebView {
                 return true;
             } else if (TextUtils.indexOf(url, STATE_SCHEME) == 0) {
                 stateCheck(decode);
-                return true;
-            } else if (TextUtils.indexOf(url, INTERFACE_SCHEME) == 0) {
-                interfaceCallback(decode);
                 return true;
             }
 

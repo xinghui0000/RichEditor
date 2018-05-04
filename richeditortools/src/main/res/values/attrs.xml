@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="REToolbarView">
+        <attr name="reExtraItemDisplayMode" format="enum">
+            <enum name="inline" value="0"/>
+            <enum name="drawer" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>

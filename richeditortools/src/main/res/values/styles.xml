@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:listChoiceIndicatorSingle">@drawable/selector_checkbox_mask</item>
+    </style>
+</resources>

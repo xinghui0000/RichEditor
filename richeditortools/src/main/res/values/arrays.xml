@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="font_color">
+        <item>@color/picker_black</item>
+        <item>@color/picker_red</item>
+        <item>@color/picker_pink</item>
+        <item>@color/picker_purple</item>
+        <item>@color/picker_deep_purple</item>
+        <item>@color/picker_indigo</item>
+        <item>@color/picker_blue</item>
+        <item>@color/picker_light_blue</item>
+        <item>@color/picker_cyan</item>
+        <item>@color/picker_teal</item>
+        <item>@color/picker_green</item>
+        <item>@color/picker_light_green</item>
+        <item>@color/picker_lime</item>
+        <item>@color/picker_yellow</item>
+        <item>@color/picker_amber</item>
+        <item>@color/picker_orange</item>
+        <item>@color/picker_deep_orange</item>
+        <item>@color/picker_brown</item>
+        <item>@color/picker_grey</item>
+        <item>@color/picker_blue_grey</item>
+    </integer-array>
+
+    <string-array name="arrs_font_size">
+        <item>10px</item>
+        <item>14px</item>
+        <item>16px</item>
+        <item>19px</item>
+        <item>24px</item>
+        <item>32px</item>
+        <item>48px</item>
+    </string-array>
+</resources>
