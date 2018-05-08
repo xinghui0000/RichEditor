@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RichEditor">
+        <attr name="placeHolder" format="string"/>
+        <attr name="fontColor" format="color"/>
+        <attr name="fontSize">
+            <flag name="fs10" value="10"/>
+            <flag name="fs14" value="14"/>
+            <flag name="fs16" value="16"/>
+            <flag name="fs19" value="19"/>
+            <flag name="fs24" value="24"/>
+            <flag name="fs32" value="32"/>
+            <flag name="fs48" value="48"/>
+        </attr>
+        <attr name="editable" format="boolean"/>
+        <attr name="enableNestScroll" format="boolean"/>
+    </declare-styleable>
+</resources>

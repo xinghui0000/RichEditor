@@ -186,9 +186,9 @@ RE.insertImage = function(url, width, alt) {
 RE.setEditable = function(editable) {
     var editor = document.getElementById("editor");
     if (editable) {
-        editor.classList.add('disableEdit');
-    } else {
         editor.classList.remove('disableEdit');
+    } else {
+        editor.classList.add('disableEdit');
     }
 
 }

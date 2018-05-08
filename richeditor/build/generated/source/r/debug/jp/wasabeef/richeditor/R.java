@@ -7,4 +7,19 @@
 package jp.wasabeef.richeditor;
 
 public final class R {
+    public static final class attr {
+        public static int editable = 0x7f040001;
+        public static int enableNestScroll = 0x7f040002;
+        public static int fontColor = 0x7f040003;
+        public static int fontSize = 0x7f040004;
+        public static int placeHolder = 0x7f040005;
+    }
+    public static final class styleable {
+        public static int[] RichEditor = { 0x7f040001, 0x7f040002, 0x7f040003, 0x7f040004, 0x7f040005 };
+        public static int RichEditor_editable = 0;
+        public static int RichEditor_enableNestScroll = 1;
+        public static int RichEditor_fontColor = 2;
+        public static int RichEditor_fontSize = 3;
+        public static int RichEditor_placeHolder = 4;
+    }
 }

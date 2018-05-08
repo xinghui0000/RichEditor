@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -25,7 +27,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 /**
  * Copyright (C) 2015 Wasabeef
@@ -44,7 +45,6 @@ import java.util.regex.Pattern;
  */
 
 public class RichEditor extends WebView {
-    public static String MLF_IMG_STYLE = "<style>img{width:100%% !important;height:auto  !important;}</style>";
     public static final String TAG = RichEditor.class.getName();
 
     public enum Type {
@@ -113,6 +113,9 @@ public class RichEditor extends WebView {
     private OnDecorationStateListener mDecorationStateListener;
     private AfterInitialLoadListener mLoadListener;
 
+    private boolean enabledNestedScroll;
+
+
     public RichEditor(Context context) {
         this(context, null);
     }
@@ -133,17 +136,6 @@ public class RichEditor extends WebView {
         loadUrl(SETUP_HTML);
 
         applyAttributes(context, attrs);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
-        post(new Runnable() {
-            @Override
-            public void run() {
-                int px = getHeight();
-                setEditorHeight(px);
-            }
-        });
     }
 
     protected EditorWebViewClient createWebviewClient() {
@@ -190,7 +182,17 @@ public class RichEditor extends WebView {
 
     private void applyAttributes(Context context, AttributeSet attrs) {
         final int[] attrsArray = new int[]{
-                android.R.attr.gravity
+                android.R.attr.gravity,
+                android.R.attr.padding,
+                android.R.attr.paddingLeft,
+                android.R.attr.paddingTop,
+                android.R.attr.paddingRight,
+                android.R.attr.paddingBottom,
+                R.attr.editable,
+                R.attr.enableNestScroll,
+                R.attr.fontColor,
+                R.attr.fontSize,
+                R.attr.placeHolder
         };
         TypedArray ta = context.obtainStyledAttributes(attrs, attrsArray);
 
@@ -219,7 +221,35 @@ public class RichEditor extends WebView {
                 exec("javascript:RE.setTextAlign(\"center\")");
                 break;
         }
+        int padding = ta.getDimensionPixelSize(1, 0);
+        int paddingL = ta.getDimensionPixelSize(2, 0);
+        int paddingT = ta.getDimensionPixelSize(3, 0);
+        int paddingR = ta.getDimensionPixelSize(4, 0);
+        int paddingB = ta.getDimensionPixelSize(5, 0);
+        setPadding(
+                Utils.pxToDp(paddingL == 0? padding : paddingL),
+                Utils.pxToDp(paddingT == 0? padding : paddingT),
+                Utils.pxToDp(paddingR == 0? padding : paddingR),
+                Utils.pxToDp(paddingB == 0? padding : paddingB)
+        );
+        setEditable(ta.getBoolean(6, true));
+        enabledNestedScroll = ta.getBoolean(7, false);
+        int color = ta.getColor(8, getResources().getColor(android.R.color.tab_indicator_text));
+        setEditorFontColor(color);
 
+        int fontSize = ta.getInt(9, 19);
+        setEditorFontSize(fontSize);
+
+        String placeHolder = ta.getString(10);
+        setPlaceholder(placeHolder == null? "" : placeHolder);
+
+        post(new Runnable() {
+            @Override
+            public void run() {
+                int px = getHeight();
+                setEditorHeight(px);
+            }
+        });
         ta.recycle();
     }
 
@@ -227,7 +257,6 @@ public class RichEditor extends WebView {
         if (contents == null) {
             contents = "";
         }
-        contents += MLF_IMG_STYLE;
         try {
             exec("javascript:RE.setHtml('" + URLEncoder.encode(contents, "UTF-8") + "');");
         } catch (UnsupportedEncodingException e) {
@@ -235,7 +264,6 @@ public class RichEditor extends WebView {
         }
         mContents = contents;
 
-//        exec("javascript:RE.changeImgStyle()");
     }
 
     public void setEditable(boolean editable) {
@@ -244,17 +272,7 @@ public class RichEditor extends WebView {
 
 
     public String getHtml() {
-        if (mContents == null) {
-            return null;
-        }
-        return removeFirstStyle(mContents);
-//        return mContents;
-    }
-
-    static public String removeFirstStyle(String content) {
-        Pattern p = Pattern.compile("<style[^>]*>(.*?)</style>",
-                Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-        return p.matcher(content).replaceFirst("");
+        return mContents;
     }
 
     public void setEditorFontColor(int color) {
@@ -507,7 +525,11 @@ public class RichEditor extends WebView {
         }
     }
 
-
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        requestDisallowInterceptTouchEvent(enabledNestedScroll);
+        return super.onTouchEvent(event);
+    }
     protected class EditorWebViewClient extends WebViewClient {
         @Override
         public void onPageFinished(WebView view, String url) {

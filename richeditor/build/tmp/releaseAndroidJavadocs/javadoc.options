@@ -1,7 +1,0 @@
--classpath '/Users/lixinghui/Library/Android/sdk/android-sdk-macosx/platforms/android-27/android.jar:/Users/lixinghui/AndroidStudioProjects/Project_Self/RichEditor/richeditor/build/generated/source/apt/release:/Users/lixinghui/AndroidStudioProjects/Project_Self/RichEditor/richeditor/build/intermediates/classes/release'
--d '/Users/lixinghui/AndroidStudioProjects/Project_Self/RichEditor/richeditor/build/docs/javadoc'
--doctitle 'richeditor API'
--quiet 
--windowtitle 'richeditor API'
-'/Users/lixinghui/AndroidStudioProjects/Project_Self/RichEditor/richeditor/src/main/java/jp/wasabeef/richeditor/Utils.java'
-'/Users/lixinghui/AndroidStudioProjects/Project_Self/RichEditor/richeditor/src/main/java/jp/wasabeef/richeditor/RichEditor.java'

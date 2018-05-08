@@ -1,1 +1,12 @@
 jp.wasabeef.richeditor
+int attr editable 0x7f040001
+int attr enableNestScroll 0x7f040002
+int attr fontColor 0x7f040003
+int attr fontSize 0x7f040004
+int attr placeHolder 0x7f040005
+int[] styleable RichEditor { 0x7f040001, 0x7f040002, 0x7f040003, 0x7f040004, 0x7f040005 }
+int styleable RichEditor_editable 0
+int styleable RichEditor_enableNestScroll 1
+int styleable RichEditor_fontColor 2
+int styleable RichEditor_fontSize 3
+int styleable RichEditor_placeHolder 4

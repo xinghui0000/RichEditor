@@ -1,10 +1,13 @@
 package com.trs.richeditor;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
 
 import com.trs.richeditortools.ExtraItem;
 import com.trs.richeditortools.REToolbarView;
@@ -23,8 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
         RichEditor richEditor = findViewById(R.id.editor);
         REToolbarView toolbarView = findViewById(R.id.retoolbar);
-        richEditor.setPlaceholder("ddfadfa");
         toolbarView.setRichEditor(richEditor);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
 
         List<ExtraItem> items = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

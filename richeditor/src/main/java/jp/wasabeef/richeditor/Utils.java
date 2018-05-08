@@ -1,6 +1,7 @@
 package jp.wasabeef.richeditor;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -63,5 +64,9 @@ public final class Utils {
 
   public static long getCurrentTime() {
     return System.currentTimeMillis();
+  }
+
+  public static int pxToDp(int px) {
+    return (int)(px / Resources.getSystem().getDisplayMetrics().density);
   }
 }

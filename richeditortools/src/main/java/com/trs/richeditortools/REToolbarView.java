@@ -38,7 +38,7 @@ import jp.wasabeef.richeditor.RichEditor;
 /**
  * Created by lixinghui on 16/6/29.
  */
-public class REToolbarView extends FrameLayout implements View.OnClickListener{
+public class REToolbarView extends FrameLayout implements View.OnClickListener, RichEditor.OnDecorationStateListener{
     private final static ColorStateList sColorStateList;
 
     static {
@@ -215,7 +215,7 @@ public class REToolbarView extends FrameLayout implements View.OnClickListener{
                                 setForeColorSelect(Color.parseColor(type.getValue().toString()));
                                 break;
                             case FONTSIZE:
-                                setFontSizeSelect(Integer.parseInt(type.getValue().toString()));
+                                setFontSizeSelect(Integer.parseInt(type.getValue().toString()) - 1);
                                 break;
                             default:
                                 break;
@@ -228,6 +228,11 @@ public class REToolbarView extends FrameLayout implements View.OnClickListener{
                 }
             });
         }
+    }
+
+    @Override
+    public void onStateChangeListener(String text, List<RichEditor.Type> types) {
+
     }
 
     private void setAlignSelect(@IdRes int id) {
@@ -277,12 +282,14 @@ public class REToolbarView extends FrameLayout implements View.OnClickListener{
 
     private void setFontSizeSelect(int size) {
         mFontSizeImageButton.setTag(size);
-        String strFontSize = getContext().getResources().getStringArray(R.array.arrs_font_size)[size];
+        String[] arrFontSizes = getContext().getResources().getStringArray(R.array.arrs_font_size);
+        String strFontSize = arrFontSizes[size];
         mFontSizeImageButton.setText(strFontSize.substring(0, 2));
     }
 
     private void showFontSizeSelectDialog() {
         int size = (Integer) mFontSizeImageButton.getTag();
+        Utils.hideKeyboard(getContext());
         new AlertDialog.Builder(getContext(), R.style.AlertDialogCustom)
                 .setTitle(getContext().getString(R.string.prompt_select_font_size))
                 .setSingleChoiceItems(R.array.arrs_font_size, size, new DialogInterface.OnClickListener() {
@@ -293,6 +300,12 @@ public class REToolbarView extends FrameLayout implements View.OnClickListener{
                             mRichEditor.setFontSize(which);
                         }
                         dialog.dismiss();
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Utils.showKeyboard(getContext());
+                            }
+                        });
                     }
                 })
                 .show();
@@ -326,8 +339,16 @@ public class REToolbarView extends FrameLayout implements View.OnClickListener{
                 }
                 //图标跟随变色功能
                 setForeColorSelect(color);
+
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.showKeyboard(getContext());
+                    }
+                }, 100);
             }
         });
+        Utils.hideKeyboard(getContext());
         colorPickerDialog.show(((Activity)getContext()).getFragmentManager(), "ColorPicker");
     }
 
