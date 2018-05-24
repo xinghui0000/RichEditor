@@ -75,6 +75,8 @@ public class REToolbarView extends FrameLayout implements View.OnClickListener, 
     private int mExtraItemDisplayMode;
     private List<ExtraItem> mExtraItems;
 
+    private RichEditor.OnDecorationStateListener mUserDecorationStateListener;
+
     public REToolbarView(Context context) {
         super(context);
         initView(context, null);
@@ -139,6 +141,7 @@ public class REToolbarView extends FrameLayout implements View.OnClickListener, 
         button.setBackgroundColor(Color.TRANSPARENT);
         int padding = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         button.setPadding(3 * padding, padding, 3 * padding, padding);
+        button.setOnClickListener(item.clickListener());
         return button;
     }
 
@@ -175,64 +178,63 @@ public class REToolbarView extends FrameLayout implements View.OnClickListener, 
     public void setRichEditor(final RichEditor mRichEditor) {
         this.mRichEditor = mRichEditor;
         if (mRichEditor != null) {
-            mRichEditor.setOnDecorationChangeListener(new RichEditor.OnDecorationStateListener() {
-                @Override
-                public void onStateChangeListener(String text, List<RichEditor.Type> types) {
-                    if (types == null)
-                        return;
-                    boolean isBold = false;
-                    boolean isItalic = false;
-                    boolean isUnderLine = false;
-                    boolean isOrderedList = false;
-                    for (RichEditor.Type type : types) {
-                        switch (type) {
-                            case BOLD:
-                                isBold = true;
-                                break;
-                            case ITALIC:
-                                isItalic = true;
-                                break;
-                            case UNDERLINE:
-                                isUnderLine = true;
-                                break;
-                            case ORDEREDLIST:
-                                isOrderedList = true;
-                                break;
-                            case JUSTIFYCENTER:
-                                setAlignSelect(R.id.retoolbar_justify_center);
-                                break;
-                            case JUSTIFYFULL:
-                                setAlignSelect(R.id.retoolbar_justify_full);
-                                break;
-                            case JUSTIFYLEFT:
-                                setAlignSelect(R.id.retoolbar_justify_left);
-                                break;
-                            case JUSTIFYRIGHT:
-                                setAlignSelect(R.id.retoolbar_justify_right);
-                                break;
-                            case FORECOLOR:
-                                //图标跟随变色功能
-                                setForeColorSelect(Color.parseColor(type.getValue().toString()));
-                                break;
-                            case FONTSIZE:
-                                setFontSizeSelect(Integer.parseInt(type.getValue().toString()) - 1);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    setBoldSelect(isBold);
-                    setItalicSelect(isItalic);
-                    setUnderlineSelect(isUnderLine);
-                    setOrderedList(isOrderedList);
-                }
-            });
+            mUserDecorationStateListener = mRichEditor.getDecorationStateListener();
+            mRichEditor.setOnDecorationChangeListener(this);
         }
     }
 
     @Override
     public void onStateChangeListener(String text, List<RichEditor.Type> types) {
-
+        if (types == null)
+            return;
+        boolean isBold = false;
+        boolean isItalic = false;
+        boolean isUnderLine = false;
+        boolean isOrderedList = false;
+        for (RichEditor.Type type : types) {
+            switch (type) {
+                case BOLD:
+                    isBold = true;
+                    break;
+                case ITALIC:
+                    isItalic = true;
+                    break;
+                case UNDERLINE:
+                    isUnderLine = true;
+                    break;
+                case ORDEREDLIST:
+                    isOrderedList = true;
+                    break;
+                case JUSTIFYCENTER:
+                    setAlignSelect(R.id.retoolbar_justify_center);
+                    break;
+                case JUSTIFYFULL:
+                    setAlignSelect(R.id.retoolbar_justify_full);
+                    break;
+                case JUSTIFYLEFT:
+                    setAlignSelect(R.id.retoolbar_justify_left);
+                    break;
+                case JUSTIFYRIGHT:
+                    setAlignSelect(R.id.retoolbar_justify_right);
+                    break;
+                case FORECOLOR:
+                    //图标跟随变色功能
+                    setForeColorSelect(Color.parseColor(type.getValue().toString()));
+                    break;
+                case FONTSIZE:
+                    setFontSizeSelect(Integer.parseInt(type.getValue().toString()) - 1);
+                    break;
+                default:
+                    break;
+            }
+        }
+        setBoldSelect(isBold);
+        setItalicSelect(isItalic);
+        setUnderlineSelect(isUnderLine);
+        setOrderedList(isOrderedList);
+        if (mUserDecorationStateListener != null) {
+            mUserDecorationStateListener.onStateChangeListener(text, types);
+        }
     }
 
     private void setAlignSelect(@IdRes int id) {

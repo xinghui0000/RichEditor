@@ -28,11 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:background="@color/colorLabel">
-            </FrameLayout>
             <jp.wasabeef.richeditor.RichEditor
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
@@ -46,6 +41,11 @@
                 android:focusableInTouchMode="true"
                 android:focusable="true">
             </jp.wasabeef.richeditor.RichEditor>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:background="@color/colorLabel">
+            </FrameLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
     <com.trs.richeditortools.REToolbarView

@@ -14,44 +14,13 @@
  * limitations under the License.
  */
 
-@charset "UTF-8";
-
-
-html {
-  height: 100%;
-}
-
-body {
-  overflow: scroll;
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-  min-height:100%;
-}
-
-img {
-   max-width:100%
-}
-
-#editor {
-  display: table-cell;
-
-  -webkit-user-select: auto !important;
-  -webkit-user-modify: read-write;
-
-
-  outline: 0px solid transparent;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.disableEdit {
-   -webkit-user-modify: read-only !important;
-}
-
-#editor[placeholder]:empty:not(:focus):before {
-  content: attr(placeholder);
-  opacity: .5;
-}}
-
+(function(){
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = '#editor.emptyHint[emptyhint]:empty:not(:focus):before {'
+                       +    'content: attr(emptyhint);'
+                       +    'opacity: 1;'
+                       +    'color: #F80606'
+                       +'}';
+    document.getElementsByTagName('head')[0].appendChild(style);
+})();

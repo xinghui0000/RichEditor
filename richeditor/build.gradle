@@ -6,7 +6,7 @@ publish {
     groupId = 'com.trs'
     repoName= 'TRS-QD'
     artifactId = 'rich-editor'
-    publishVersion = '1.0.2'
+    publishVersion = '1.0.4'
     desc = 'a rich editor'
     website = 'https://github.com/xinghui0000/RichEditor.git'
 }

@@ -146,8 +146,16 @@ public class RichEditor extends WebView {
         mTextChangeListener = listener;
     }
 
+    public OnTextChangeListener getTextChangeListener() {
+        return mTextChangeListener;
+    }
+
     public void setOnDecorationChangeListener(OnDecorationStateListener listener) {
         mDecorationStateListener = listener;
+    }
+
+    public OnDecorationStateListener getDecorationStateListener() {
+        return mDecorationStateListener;
     }
 
     public void setOnInitialLoadListener(AfterInitialLoadListener listener) {
@@ -500,6 +508,11 @@ public class RichEditor extends WebView {
         exec("javascript:RE.blurFocus();");
     }
 
+    public void showEmptyHint(String hint) {
+        exec("javascript:RE.setEmptyHint('" + hint + "');");
+        exec("javascript:RE.showEmptyHint();");
+    }
+
     private String convertHexColorString(int color) {
         return String.format("#%06X", (0xFFFFFF & color));
     }
@@ -527,7 +540,7 @@ public class RichEditor extends WebView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        requestDisallowInterceptTouchEvent(enabledNestedScroll);
+        requestDisallowInterceptTouchEvent(enabledNestedScroll && isFocused());
         return super.onTouchEvent(event);
     }
     protected class EditorWebViewClient extends WebViewClient {

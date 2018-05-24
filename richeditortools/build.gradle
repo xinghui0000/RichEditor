@@ -6,7 +6,7 @@ publish {
     groupId = 'com.trs'
     repoName= 'TRS-QD'
     artifactId = 'rich-editor-tools'
-    publishVersion = '1.0.2'
+    publishVersion = '1.0.4'
     desc = 'tools for rich editor'
     website = 'https://github.com/xinghui0000/RichEditor.git'
 }
@@ -34,13 +34,13 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:gridlayout-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support:gridlayout-v7:27.1.1'
+    compile 'com.android.support:design:27.1.1'
+    compile 'com.trs:color-picker:0.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.trs:color-picker:0.0.1'
-    implementation project(':richeditor')
+    compile project(':richeditor')
 }
